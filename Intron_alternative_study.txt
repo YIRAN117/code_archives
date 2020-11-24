@@ -1,0 +1,11 @@
+cat /Users/yiranli/Dropbox/BMGF_report_Jan09/new_after_uniqueness_clean/mRNA_alternativeSplicing.gtf \
+|cut -f9|grep -o "CPIW_.*-RA" |sort|uniq|cut -f1 -d ";"|sed 's/"//g'|sort|uniq >1
+
+perl -ne 'if(/^>(\S+)/){$c=$i{$1}}$c?print:chomp;$i{$_}=1 if @ARGV' 1 /
+<(cat /Users/yiranli/Dropbox/Functional_Annotation/Cpar_BMGF/genome.proteins.fasta|sed 's/>protein|/>/g'|sed 's/ ID=.*$//g'|sed 's/*$//g')>/Users/yiranli/Dropbox/AS_PROTEIN
+
+##multiple of three calculation##
+cat /Users/yiranli/Dropbox/Alternative_splicing/SUPPA_coding/_RI_strict.ioe |cut -f1,3|cut -d ":" -f1,4|sed 's/MSTRG.*RI://g'|sed 's/-/\t/g'|awk 'function abs(v) {return v<0? -v:v}{print abs($2-$1)+1}'|awk '{print $1%3}'|sort|uniq -c
+cat /Users/yiranli/Desktop/intron.bed |awk 'function abs(v) {return v<0? -v:v}{print abs($3-$2)+1}'|awk '{print $1%3}'|sort|uniq -c
+
+grep -f <(cat /Users/yiranli/Dropbox/Alternative_splicing/SUPPA_coding/_RI_strict.ioe |cut -f2|sort|uniq|grep -v "gene_id") /Users/yiranli/Dropbox/Alternative_splicing/all_coding_transcripts_intronRetained.gtf |sort -k4 |uniq>/Users/yiranli/Dropbox/intron_study/mRNA_RI.gtf
